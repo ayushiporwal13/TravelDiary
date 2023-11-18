@@ -1,1 +1,2 @@
-# RideShare
+Travel Diary:
+Build a travel diary platform where users can share their travel experiences. Posts can include titles, textual content, and images. The home feed displays travel posts with minimal details. Clicking on a post leads to a detailed page with the travel story, images, comments, and upvote functionality.
