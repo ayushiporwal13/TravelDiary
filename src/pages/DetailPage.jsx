@@ -8,18 +8,19 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 const DetailPage = ({ data }) => {
   const { id } = useParams();
+  const post = data.filter((post) => post.id == id);
   const [count, setCount] = useState(
-    data[id] === undefined ? 0 : data[id].upvotes
+    post[0] === undefined ? 0 : post[0].upvotes
   );
   const [travelPost, setTravelPost] = useState([]);
-  const [newComment, setNewComment] = useState(""); // new comment input
+  const [comments, setComments] = useState([post[0].comments]);
+  const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
     const fetchPost = async () => {
       const { data } = await supabase.from("TravelDiary").select().eq("id", id);
 
       if (data) {
-        console.log(data);
         setTravelPost(data);
         setCount(data[0]?.upvotes || 0); // Set the upvotes count based on the first item in the data array
       }
@@ -30,30 +31,26 @@ const DetailPage = ({ data }) => {
 
   const upVote = async () => {
     setCount((count) => count + 1);
-    console.log("count", count);
     const { data } = await supabase
       .from("TravelDiary")
       .update({ upvotes: count + 1 })
       .eq("id", id);
   };
 
+  const handleChange = (e) => {
+    const newComment = e.target.value;
+    setNewComment(newComment);
+  };
+
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
+    setComments((prev) => ([...prev, newComment]));
+    const {data, error} = await supabase
+    .from('TravelDiary')
+    .update({ comments:comments})
+    .eq('id', id)
 
-    const { data, error } = await supabase
-      .from("TravleDiary")
-      .update({ comments: newComment })
-      .eq("id", id);
-
-    if (error) {
-      console.error("Error adding comment: ", error);
-    } else {
-      setTravelPost((prevState) => ({
-        ...prevState,
-        comments: [...prevState.comments, data[0]],
-      }));
-      setNewComment("");
-    }
+    window.alert("Comment Added Successfully");
   };
 
   const deletePost = async () => {
@@ -69,7 +66,6 @@ const DetailPage = ({ data }) => {
     }
   }
 
-  console.log("count outside", count);
   return (
     <>
       {travelPost &&
@@ -84,19 +80,20 @@ const DetailPage = ({ data }) => {
             />
             <h4>{data.location}</h4>
             <h4>{data.date}</h4>
-            <h4>{data.comments}</h4>
             <Box component="form" onSubmit={handleCommentSubmit}>
+              <div>
+              {travelPost &&
+              travelPost.map((post, index) => (
+                <div key={index}>{post.comments}</div>
+              ))}
+              </div>
               <TextField
                 label="New Comment"
                 value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
+                onChange={(e) => handleChange(e)}
               />
               <Button type="submit">Submit</Button>
             </Box>
-            {travelPost.comments &&
-              travelPost.comments.map((comment, index) => (
-                <p key={index}>{comment.text}</p>
-              ))}
           </div>
         ))}
 
