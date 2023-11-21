@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../client";
 import Cards from "../components/Cards";
-import { Grid } from "@mui/material";
+import { Grid, CircularProgress } from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 
@@ -9,9 +9,11 @@ const PostFeed = (data) => {
   const [travelPost, setTravelPost] = useState([]);
   const [sortType, setSortType] = useState("created_at"); // default sort type
   const [searchTerm, setSearchTerm] = useState(""); // search term
+  const [isLoading, setIsLoading] = useState(false); // loading state
 
   useEffect(() => {
     const fetchPost = async () => {
+      setIsLoading(true);
       let { data } = await supabase
         .from("TravelDiary")
         .select()
@@ -28,10 +30,13 @@ const PostFeed = (data) => {
       }
 
       setTravelPost(data);
+      setIsLoading(false);
     };
 
     fetchPost();
   }, [sortType, searchTerm]); // re-run the effect when sortType or searchTerm changes
+
+  if (isLoading) return <CircularProgress />;
 
   return (
     <div>
