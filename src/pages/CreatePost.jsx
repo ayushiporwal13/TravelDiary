@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Inputfield from "../components/Inputfield";
+import Inputfield from "../components/inputfield";
 import { Button } from "@mui/material";
 import { supabase } from '../client';
 
