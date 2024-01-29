@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../client";
-import Cards from "../components/Cards";
+import Cards from "../components/cards";
 import { Grid, CircularProgress } from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
