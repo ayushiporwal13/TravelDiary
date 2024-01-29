@@ -1,7 +1,7 @@
 import React from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Button } from "@mui/material";
-import Inputfield from "../components/Inputfield";
+import Inputfield from "../components/inputfield";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "../client";
